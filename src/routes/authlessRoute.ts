@@ -1,6 +1,6 @@
 // import { Router } from "express";
 // import { loginUser, registerUser } from "../controllers/authController";
-// import { getQuizQuestions } from "../controllers/quizQuestionsController";
+import { getQuizQuestions } from "../controllers/quizQuestionsController";
 // import { submitQuizAnswers } from "../controllers/quizController";
 
 // const router = Router();
@@ -44,12 +44,18 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.get("/quiz/start", (req, res) => {
-  console.log('Quiz start route hit');
-  res.json({ 
-    message: 'Quiz start test endpoint working',
-    timestamp: new Date().toISOString()
-  });
+router.get("/quiz/start", async (req, res) => {
+  try {
+    console.log('Testing getQuizQuestions controller');
+    await getQuizQuestions(req, res);
+  } catch (error:any) {
+    console.error('getQuizQuestions error:', error);
+    res.status(500).json({ 
+      error: 'Controller error',
+      message: error.message,
+      stack: error.stack 
+    });
+  }
 });
 
 router.post("/quiz/submit", (req, res) => {
