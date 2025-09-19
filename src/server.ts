@@ -56,18 +56,18 @@ app.use((error: Error, req: express.Request, res: express.Response) => {
 
 
 //database check and server init
-app.listen(PORT, async() => {
-  try {
-    await databaseTestConnection();
-    console.log(`Server is running on port ${PORT}`);
-    if (process.env.NODE_ENV === "development") {
-      console.log("Development mode - CORS enabled for localhost");
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, async () => {
+    try {
+      await databaseTestConnection();
+      console.log(`Server running on port ${PORT}`);
+    } catch (error) {
+      console.error('Failed to start server:', error);
+      process.exit(1);
     }
-    if (process.env.NODE_ENV === "production") {
-      console.log("Production mode");
-    }
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-});
+  });
+}
+
+
+export default app;
+
