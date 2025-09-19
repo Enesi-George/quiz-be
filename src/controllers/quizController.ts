@@ -102,22 +102,3 @@ export const submitQuizAnswers = async (
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-export const getUserQuizHistory = async(req: AuthenticatedRequest, res: Response)=>{
-try {
-  if(!req.user){
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  const userId = req.user.userId;
-  const result = await pool.query(`SELECT * FROM quiz_results WHERE user_id = $1 ORDER BY time_taken DESC`, [userId]);
-  if(result.rows.length === 0){
-    return res.status(404).json({ error: 'No quiz history found' });
-  }
-  res.status(200).json(result.rows);  
-} catch (error) {
-  console.error('Error fetching quiz history: ', error); 
-  res.status(500).json({ error: 'Internal server error' });
-  
-}
-}
