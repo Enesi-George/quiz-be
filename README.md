@@ -54,7 +54,7 @@ psql -U your_username -d quiz_app -f database/schema.sql
 #### (Optional) Seed Sample Data
 
 ```bash
-# If you have sample data, run:
+# If you wish to seed sample data via cli, run:
 npm run db:seed
 ```
 
