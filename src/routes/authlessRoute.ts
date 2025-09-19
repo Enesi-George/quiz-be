@@ -1,18 +1,64 @@
+// import { Router } from "express";
+// import { loginUser, registerUser } from "../controllers/authController";
+// import { getQuizQuestions } from "../controllers/quizQuestionsController";
+// import { submitQuizAnswers } from "../controllers/quizController";
+
+// const router = Router();
+
+// // Register
+// router.post("/register", registerUser);
+
+// // Login 
+// router.post("/login", loginUser);
+
+// // Public Quiz routes (no auth required)
+// router.get("/quiz/start", getQuizQuestions);
+// router.post("/quiz/submit", submitQuizAnswers);
+
+// export default router; 
+
 import { Router } from "express";
-import { loginUser, registerUser } from "../controllers/authController";
-import { getQuizQuestions } from "../controllers/quizQuestionsController";
-import { submitQuizAnswers } from "../controllers/quizController";
+// Comment out the controller imports temporarily
+// import { loginUser, registerUser } from "../controllers/authController";
+// import { getQuizQuestions } from "../controllers/quizQuestionsController";
+// import { submitQuizAnswers } from "../controllers/quizController";
 
 const router = Router();
 
-// Register
-router.post("/register", registerUser);
+// Simple test functions instead of controllers
+router.post("/register", (req, res) => {
+  console.log('Register route hit');
+  res.json({ 
+    message: 'Register test endpoint working',
+    body: req.body,
+    timestamp: new Date().toISOString()
+  });
+});
 
-// Login 
-router.post("/login", loginUser);
+router.post("/login", (req, res) => {
+  console.log('Login route hit');
+  res.json({ 
+    message: 'Login test endpoint working',
+    body: req.body,
+    timestamp: new Date().toISOString()
+  });
+});
 
-// Public Quiz routes (no auth required)
-router.get("/quiz/start", getQuizQuestions);
-router.post("/quiz/submit", submitQuizAnswers);
+router.get("/quiz/start", (req, res) => {
+  console.log('Quiz start route hit');
+  res.json({ 
+    message: 'Quiz start test endpoint working',
+    timestamp: new Date().toISOString()
+  });
+});
 
-export default router; 
+router.post("/quiz/submit", (req, res) => {
+  console.log('Quiz submit route hit');
+  res.json({ 
+    message: 'Quiz submit test endpoint working',
+    body: req.body,
+    timestamp: new Date().toISOString()
+  });
+});
+
+export default router;
