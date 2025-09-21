@@ -6,12 +6,10 @@ import { databaseTestConnection } from "./config/database";
 import authlessRoute from "./routes/authlessRoute";
 import authRoute from "./routes/authRoute";
 
-
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 8080;
 
-//security middleware
+// security middleware
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
@@ -21,17 +19,18 @@ app.use(
 const corsOptions = {
   origin:
     process.env.NODE_ENV === "production"
-      ? process.env.FRONTEND_URL?.split(",") || ["https://quiz-app-livid-alpha.vercel.app"]
+      ? process.env.FRONTEND_URL?.split(",") || [
+          "https://quiz-app-livid-alpha.vercel.app",
+        ]
       : ["http://localhost:3000", "http://localhost:5173"],
   credentials: true,
   optionsSuccessStatus: 200,
 };
 
-
 app.use(cors(corsOptions));
 app.use(express.json());
 
-//routes
+// routes
 app.use("/api/auth", authlessRoute);
 app.use("/api/public", authlessRoute); // Public quiz routes
 app.use("/api", authRoute);
@@ -40,30 +39,42 @@ app.use("*", (req, res) => {
   res.status(404).json({ error: "Resource not found" });
 });
 
-// Global error handler
-app.use((error: Error, req: express.Request, res: express.Response) => {
-  console.error('Unhandled error:', error);
-  
-  res.status(500).json({
-    error: 'Internal server error',
-    message: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'
-  });
-});
+// global error handler
+app.use(
+  (
+    error: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error("Unhandled error:", error);
 
+    res.status(500).json({
+      error: "Internal server error",
+      message:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Something went wrong",
+    });
+  }
+);
 
-//database check and server init
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, async () => {
-    try {
-      await databaseTestConnection();
-      console.log(`Server running on port ${PORT}`);
-    } catch (error) {
-      console.error('Failed to start server:', error);
-      process.exit(1);
-    }
-  });
-}
-
-
+// Export handler for Vercel
 export default app;
 
+//For local dev only
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 8080;
+
+  (async () => {
+    try {
+      await databaseTestConnection();
+      app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+      });
+    } catch (error) {
+      console.error("Failed to start server:", error);
+      process.exit(1);
+    }
+  })();
+}
