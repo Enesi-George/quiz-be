@@ -5,6 +5,7 @@ import cors from "cors";
 import { databaseTestConnection } from "./config/database";
 import authlessRoute from "./routes/authlessRoute";
 import authRoute from "./routes/authRoute";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
 dotenv.config();
 const app = express();
@@ -26,6 +27,12 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200,
 };
+
+app.use((req, res, next) => {
+  console.log("Incoming request:", req.method, req.url);
+  next();
+});
+
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -60,7 +67,10 @@ app.use(
 );
 
 // Export handler for Vercel
-export default app;
+// export default app;
+export default (req: VercelRequest, res: VercelResponse) => {
+  return app(req as any, res as any);
+};
 
 //For local dev only
 if (process.env.NODE_ENV !== "production") {
