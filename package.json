@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "dev": "nodemon src/server.ts",
-    "build": "tsc",
-    "postbuild": "mkdir -p api && cp dist/server.js api/index.js",
-    "start": "node dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "db:seed": "node dist/scripts/databaseSeeder.js"
-  },
+"scripts": {
+  "dev": "nodemon src/server.ts",
+  "build": "tsc && npm run postbuild",
+  "postbuild": "mkdir -p api && cp dist/server.js api/index.js",
+  "start": "node dist/server.js",
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "db:seed": "node dist/scripts/databaseSeeder.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
