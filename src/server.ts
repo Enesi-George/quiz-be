@@ -33,7 +33,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 app.use(cors(corsOptions));
 app.use(express.json());
 
@@ -56,12 +55,17 @@ app.use(
   ) => {
     console.error("Unhandled error:", error);
 
+    // res.status(500).json({
+    //   error: "Internal server error",
+    //   message:
+    //     process.env.NODE_ENV === "development"
+    //       ? error.message
+    //       : "Something went wrong",
+    // });
     res.status(500).json({
       error: "Internal server error",
-      message:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "Something went wrong",
+      message: error.message,
+      stack: error.stack,
     });
   }
 );
